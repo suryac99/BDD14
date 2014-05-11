@@ -1,0 +1,48 @@
+dumbo put ./checkov.txt /tmp/checkov.txt -hadoop nemo
+dumbo ls / -hadoop wakari
+
+ dumbo ls /DataSets/Twitter/SummerCamp/Dataset1/Raw -hadoop nemo
+
+ /DataSets/Twitter/SummerCamp/Dataset1/Raw/tweets.txt
+ dumbo start dumbo_words.py -input /DataSets/Twitter/SummerCamp/Dataset1/Raw/tweets.txt -output /tmp/quasiben/out -hadoop nemo  -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce 
+
+dumbo put ./test_up.txt /tmp/test_up-hdfs.txt -hadoop nemo  -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce 
+dumbo get /tmp/quasiben/out -hadoop nemo
+
+ hadoop-streaming.jar
+ /usr/lib/hadoop-0.20-mapreduce
+
+ -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce
+
+dumbo start dumbo_words.py -input /tmp/checkov.txt -output /tmp/quasiben/out -python  /srv/anaconda/bin/python -hadoop nemo  -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/contrib/streaming/libs
+
+dumbo cat /tmp/test_up-hdfs.txt -hadoop nemo -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce 
+dumbo cat /tmp/quasiben/out3/part* -hadoop nemo -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce 
+dumbo rm /tmp/quasiben/out* -hadoop nemo -hadooplib /srv/xdata_bundle/libs/hadoop-0.20-mapreduce 
+
+hadoop jar /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming-2.0.0-mr1-cdh4.2.0.jar  -input /tmp/test_up-hdfs.txt -output /tmp/quasiben/grepcat1 -mapper 'cat' -reducer 'wc' -jobconf mapred.output.compress=false  -jobconf stream.non.zero.exit.is.failure=false
+
+hadoop jar /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming-2.0.0-mr1-cdh4.2.0.jar  -input /tmp/checkov.txt -output /tmp/quasiben/word_count_checkov -mapper 'cat' -reducer 'wc'
+
+hadoop jar /usr/joe/wordcount.jar org.myorg.WordCount /usr/joe/wordcount/input /usr/joe/wordcount/output
+
+export HADOOP_HOME="/srv/xdata_bundle/libs/hadoop-0.20-mapreduce"
+python mrjob_words.py -r hadoop --hadoop-bin /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/bin/hadoop --jobconf mapred.reduce.tasks=10 -o hdfs://tmp/quasiben/output-mrjob hdfs:///tmp/test_up-hdfs.txt
+
+dumbo start dumbo_words.py -input /tmp/test_up-hdfs.txt -output /tmp/quasiben/out21 -hadoop /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/
+
+
+<property> <name>mapred.system.dir</name> <value>/hadoop/mapred/system</value> <final>true</final> </property> 
+<property> <name>hadoop.socks.server</name> </property> <property> <name>hadoop.rpc.socket.factory.class.default</name> <value>org.apache.hadoop.net.SocksSocketFactory</value> </property>
+
+
+
+ hadoop jar /srv/xdata_bundle/libs/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming-2.0.0-mr1-cdh4.2.0.jar \
+        -input /tmp/checkov.txt \
+        -output /tmp/quasiben/streaming16 \
+        -mapper mapper.py \
+        -reducer reducer.py \
+        -file /home/quasiben/mapper.py \
+        -file /home/quasiben/reducer.py
+
+        property> <name>stream.map.input</name> <value>typedbytes</value> </property> <property> <name>stream.reduce.input</name> <value>typedbytes</value> </property>
